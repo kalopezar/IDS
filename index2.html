@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDS Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        label, input, button {
+            margin: 5px;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #result {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        canvas {
+            margin: 0 auto;
+            display: block;
+        }
+        .image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="container">
+        <div class="image-container">
+            <img src="head.jpg" alt="Your Image">
+        </div>
+        <br>
+        <br>
+        <br>
+    <h1>Traffic Prediction</h1>
+    <form id="predictionForm">
+        <label for="speed">Speed (m/s):</label>
+        <input type="number" id="speed" name="speed" step="0.01" required><br><br>
+        <label for="time">Time (s):</label>
+        <input type="number" id="time" name="time" step="0.01" required><br><br>
+        <button type="submit">Predict</button>
+    </form>
+
+    <p id="result"></p>
+
+  <script>
+        document.getElementById('predictionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const time = document.getElementById('time').value;
+            const speed = document.getElementById('speed').value;
+            
+            fetch('http://127.0.0.1:5000/predict', {  // Full URL to the server
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ Time: time, Speed: speed })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('result').innerText = 'Error: ' + data.error;
+                } else {
+                    document.getElementById('result').innerText = 'Prediction: ' + data.prediction;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'Error: ' + error;
+            });
+        });
+    </script>
+</body>
+</html>
+</body>
+</html>
+
